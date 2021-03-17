@@ -6,6 +6,9 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    #chrome is calling favicon.ico seperatrly - prevent second call
+    RewriteCond %{REQUEST_URI} !^/favicon\.ico [NC]
+
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
