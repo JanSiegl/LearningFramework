@@ -42,16 +42,17 @@ class Router
             }
             $pattern = $this->withEscapedSlashes($pattern);
             if ($this->requestMatches($pattern, $path, $patternParams, $params)) {
-                foreach($params as $key=>$value){
-                    if(0 === strpos($key, "XDEBUG")){
-                        unset($params[$key]);
+                $params = array_filter($params, function ($entry) {
+                    if (0 === strpos($entry, "XDEBUG")) {
+                        return false;
                     }
-                }
-                $func=new \ReflectionFunction($handler);
-                $funcParams=$func->getParameters();
-                $invokeParams=[];
-                foreach ($funcParams as $fParam){
-                    $invokeParams[]=$params[$fParam->getName()];
+                    return true;
+                });
+                $func = new \ReflectionFunction($handler);
+                $funcParams = $func->getParameters();
+                $invokeParams = [];
+                foreach ($funcParams as $fParam) {
+                    $invokeParams[] = $params[$fParam->getName()];
                 }
                 $func->invokeArgs($invokeParams);
                 return;
@@ -72,8 +73,8 @@ class Router
                 return ($path == $pattern);
             }
 
-            foreach($patternParams as $index=>$patternParam){
-                $params[$patternParam]=$matches[$index+1];
+            foreach ($patternParams as $index => $patternParam) {
+                $params[$patternParam] = $matches[$index + 1];
             }
             return true;
         }
