@@ -94,11 +94,6 @@ class Router
         return str_replace('/', ':', $pattern);
     }
 
-    private function withMethod($pattern)
-    {
-        return !preg_match("/^[A-Z]+ .+$/i", $pattern) ? "GET {$pattern}" : $pattern;
-    }
-
     private function withParams($pattern)
     {
         return preg_replace('/{\w+}/', '([^:]+)', $pattern);
